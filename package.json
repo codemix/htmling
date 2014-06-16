@@ -1,0 +1,39 @@
+{
+  "name": "htmling",
+  "version": "0.0.0",
+  "description": "Use HTML5 <template> and <content> syntax in node.js",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "watch": "npm run peg && mocha -- watch",
+    "peg": "pegjs ./src/parser.pegjs ./lib/parser.js",
+    "pretest": "npm run peg"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codemix/htmling"
+  },
+  "keywords": [
+    "html",
+    "template",
+    "html5",
+    "view",
+    "polymer"
+  ],
+  "author": "Charles Pick <charles@codemix.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codemix/htmling/issues"
+  },
+  "homepage": "https://github.com/codemix/htmling",
+  "devDependencies": {
+    "expect.js": "~0.3.1",
+    "pegjs": "~0.8.0",
+    "should": "~4.0.4",
+    "mocha": "~1.20.1",
+    "istanbul": "~0.2.11"
+  }
+}
