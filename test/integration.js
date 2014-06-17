@@ -11,6 +11,7 @@ describe("Integration Tests", function () {
   run("repeat");
   run("repeat-with-index");
   run("repeat-object");
+  run("sanitize");
 });
 
 

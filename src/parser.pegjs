@@ -63,6 +63,7 @@ RAW "Raw Content"
     ) .)+ {
     return {
       type: 'OutputStatement',
+      raw: true,
       expression: {
         type: 'Literal',
         value: body,
@@ -134,6 +135,7 @@ SCRIPT_ELEMENT "<script>"
   = content:$("<script" RAW_ATTRIBUTES? _ ">" SCRIPT_CONTENT? _ "</script>") {
     return {
       type: 'OutputStatement',
+      raw: true,
       expression: {
         type: 'Literal',
         value: content,
@@ -197,6 +199,7 @@ EXPRESSION "Expression"
 OUTPUT_STATEMENT "OutputStatement"
   = "{{" _ e:ExpressionStatement _ "}}" {
     e.type = "OutputStatement";
+    e.raw = false;
     return e;
   }
 
