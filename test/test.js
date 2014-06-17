@@ -30,8 +30,8 @@ function run (name) {
       fs.readFileAsync(__dirname + '/expected/' + name + '.html', 'utf8')
     ])
     .spread(function (layout, input, expected) {
-      var template = LIB.compile(input);
-      template.layouts['page.html'] = LIB.compile(layout);
+      var template = LIB.string(input);
+      template.layouts.set('page.html', LIB.string(layout));
       //console.log(template.render+'')
       // console.log(template.render(fixtures));
       var content = '';
