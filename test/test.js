@@ -48,9 +48,9 @@ describe('parser', function () {
       dump(result);
     });
     it.only('should parse a nested template tag ', function () {
-      var html = "<template bind=\"{{item.users}}\">Greetings<br><template if=\"{{user}}\">hello world</template></template>";
+      var html = "<template repeat=\"{{user, name in users}}\">Greetings<br><template if=\"{{user}}\">hello {{name}}</template></template>";
 
-      html = "{{user.name.length | foo}}";
+      //html = "{{user[abc]}}";
       var result = LIB.parser.parse(html);
       dump(result);
       var compiled = LIB.compiler.compile(result);

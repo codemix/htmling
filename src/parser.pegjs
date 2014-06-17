@@ -261,7 +261,7 @@ MarkedIdentifier
       computed: false,
       object: {
         type: 'Identifier',
-        name: '__object'
+        name: 'object'
       },
       property: {
         type: 'Identifier',
@@ -461,7 +461,19 @@ Code
   }
 
 Expression
-  = AliasExpression
+  = IterateExpression
+
+IterateExpression
+  = it:Identifier _ index:("," _ Identifier _) "in" _ expression:AliasExpression {
+    return {
+      type: 'IterateExpression',
+      it: it,
+      index: extractOptional(index, 2),
+      expression: expression,
+      body: []
+    };
+  }
+  / AliasExpression
 
 AliasExpression
   = subject:CallExpression _ "as" _ alias:Identifier {
@@ -483,7 +495,7 @@ CallExpression
           computed: false,
           object: {
             type: 'Identifier',
-            name: '__context'
+            name: 'context'
           },
           property: expr
         },
@@ -541,7 +553,7 @@ UnaryExpression
 
 
 MemberExpression
-  = head:MarkedIdentifier tail:Accessor* {
+  = head:MarkedIdentifier tail:Accessor+ {
     return {
       type: 'SequenceExpression',
       expressions: [
@@ -550,7 +562,7 @@ MemberExpression
           operator: '=',
           left: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           right: head
         },
@@ -558,12 +570,12 @@ MemberExpression
           type: 'ConditionalExpression',
           test: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           consequent: tail.reduceRight(function (prev, item) {
             item.expressions[1].consequent = prev;
             return item;
-          },{ type: 'Identifier', name: '__ref'}),
+          },{ type: 'Identifier', name: 'ref'}),
           alternate: {
             type: 'Literal',
             value: '',
@@ -573,6 +585,7 @@ MemberExpression
       ]
     };
   }
+  / MarkedIdentifier
   / Literal
   / ArrayExpression
   / ObjectExpression
@@ -588,14 +601,14 @@ Accessor
           operator: '=',
           left: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           right: {
             type: 'MemberExpression',
             computed: false,
             object: {
               type: 'Identifier',
-              name: '__ref'
+              name: 'ref'
             },
             property: v
           }
@@ -604,11 +617,11 @@ Accessor
           type: 'ConditionalExpression',
           test: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           consequent: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           alternate: {
             type: 'Literal',
@@ -628,14 +641,14 @@ Accessor
           operator: '=',
           left: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           right: {
             type: 'MemberExpression',
             computed: true,
             object: {
               type: 'Identifier',
-              name: '__ref'
+              name: 'ref'
             },
             property: v
           }
@@ -644,11 +657,11 @@ Accessor
           type: 'ConditionalExpression',
           test: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           consequent: {
             type: 'Identifier',
-            name: '__ref'
+            name: 'ref'
           },
           alternate: {
             type: 'Literal',
