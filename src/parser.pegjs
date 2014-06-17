@@ -45,6 +45,7 @@ HTML
   / CONTENT_ELEMENT
   / LAYOUT_ELEMENT
   / OUTPUT_STATEMENT
+  / SCRIPT_ELEMENT
   / RAW
   )+
 
@@ -132,7 +133,7 @@ LAYOUT_ELEMENT "<layout>"
   }
 
 SCRIPT_ELEMENT "<script>"
-  = content:$("<script" RAW_ATTRIBUTES? _ ">" SCRIPT_CONTENT? _ "</script>") {
+  = content:$("<script" RAW_ATTRIBUTES? _ ">" SCRIPT_CONTENT? "</script>") {
     return {
       type: 'OutputStatement',
       raw: true,
@@ -164,12 +165,7 @@ RAW_ATTRIBUTES "Attribute List"
   = $(_ RAW_ATTRIBUTE)+
 
 RAW_ATTRIBUTE "Attribute"
-  = $(IdentifierName (_ "=" _ RAW_ATTRIBUTE_VALUE))? {
-    return {
-      name: name,
-      value: extractOptional(value, 3) || true
-    }
-  }
+  = $(IdentifierName (_ "=" _ RAW_ATTRIBUTE_VALUE)?)
 
 
 ATTRIBUTES "Attribute List"
