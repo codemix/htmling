@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+var packageData = require('../package.json'),
+    yargs = require('yargs'),
+    argv = yargs
+    .usage('\033[1m' + packageData.name + '\033[0m - ' + packageData.description + '\nUsage: htmling [OPTIONS] path/to/folder')
+    .options({
+      o: {
+        alias: 'output',
+        describe: 'The file or directory to output to, defaults to STDOUT.'
+      },
+      c: {
+        alias: 'combine',
+        describe: 'Combine the generated templates into a single compile target.',
+        boolean: true,
+        default: true
+      },
+      v: {
+        alias: 'version',
+        describe: 'Display the HTMLing version.'
+      },
+      h: {
+        alias: 'help',
+        describe: 'Display this help screen.'
+      }
+    })
+    .argv;
+
+
+if (argv.help) {
+  yargs.showHelp();
+  return;
+}
+else if (argv.version) {
+  console.log(packageData.name + ' v' + packageData.version);
+  return;
+}
+
+argv = yargs.demand(1, 'Must specify a source directory.').argv;
+
+var LIB = require('../lib');
+var fs = require('fs');
+
+var results = argv._.map(function (filename) {
+  if (fs.statSync(filename).isDirectory()) {
+    return LIB.dir(filename);
+  }
+  else {
+    return LIB.file(filename);
+  }
+});
+
+console.log(results);

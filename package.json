@@ -10,7 +10,9 @@
     "test": "mocha",
     "watch": "npm run peg && mocha -- watch",
     "peg": "pegjs ./src/parser.pegjs ./lib/parser.js",
-    "pretest": "npm run peg"
+    "jshint": "jshint ./lib",
+    "pretest": "npm run peg && npm run jshint",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -35,10 +37,14 @@
     "should": "~4.0.4",
     "mocha": "~1.20.1",
     "istanbul": "~0.2.11",
-    "bluebird": "~2.1.2"
+    "bluebird": "~2.1.2",
+    "jshint": "~2.5.1"
   },
   "dependencies": {
     "estraverse": "~1.5.0",
-    "escodegen": "~1.3.3"
+    "escodegen": "~1.3.3",
+    "yargs": "~1.2.3",
+    "mkdirp": "~0.5.0",
+    "classing": "0.0.9"
   }
 }

@@ -81,8 +81,71 @@ This compilation process happens only once, and the resulting JavaScript is extr
 
 ## Usage
 
+HTMLing is easy to integrate with your existing build process, either via the command line or library interfaces.
+
+## CLI
+
+HTMLing ships with a small command line interface:
+
+### Compile an individual file
+The compiled output will be written to STDOUT
+
+```
+htmling ./file.html
+```
 
 
+### Compile an individual file to a destination
+The compiled output will be written to `compiled.js`.
+
+```
+htmling -o ./compiled.js ./file.html
+```
+
+### Compile a directory hierarchy
+Compile a nested directory structure to a directory called `compiled`. The output
+directory will be created if it does not already exist, and the resulting folder structure will
+match that of the input.
+
+```
+htmling -o ./compiled ./pages
+```
+
+### Compile a directory hierarchy to a single file
+Compile a nested directory structure to a single called `compiled.js`
+
+```
+htmling -c -o ./compiled.js ./pages
+```
+
+
+## As a Library
+
+It's also possible to use HTMLing as a library:
+
+### Compile a string
+
+```js
+var HTMLing = require('htmling');
+
+var template = HTMLing('Hello {{name}}');
+
+console.log(template.render({name: 'Charles'})); // "Hello Charles"
+```
+
+### Compile a file
+
+```js
+var template = HTMLing.file('./index.html');
+console.log(template.render());
+```
+
+### Compile a directory
+
+```js
+var templates = HTMLing.dir('./pages');
+console.log(templates.render('index.html', {}))
+```
 
 ## License
 
