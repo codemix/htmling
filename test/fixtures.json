@@ -1,0 +1,54 @@
+{
+  "title": "Some Page Title",
+  "lang": "en",
+  "name": "Charles",
+  "users": [
+    {
+      "name": "Charles",
+      "country": {
+        "name": "United Kingdom",
+        "iso2": "UK"
+      }
+    },
+    {
+      "name": "Clare",
+      "country": {
+        "name": "United Kingdom",
+        "iso2": "UK"
+      }
+    },
+    {
+      "name": "Mike",
+      "country": {
+        "name": "Germany",
+        "iso2": "DE"
+      }
+    },
+    {
+      "name": "Radu",
+      "country": {
+        "name": "Romania",
+        "iso2": "RO"
+      }
+    },
+    {
+      "name": "Antonio",
+      "country": {
+        "name": "Poland",
+        "iso2": "PL"
+      }
+    }
+  ],
+  "ascii": {
+    "A": 65,
+    "B": 66,
+    "C": 67,
+    "D": 68,
+    "E": 69,
+    "F": 70
+  },
+  "unsafe": [
+    "<a href=\"#wat\">Danger</a>",
+    "<script>alert(document.cookie)</script>"
+  ]
+}

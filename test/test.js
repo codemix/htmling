@@ -3,7 +3,7 @@ var LIB = require('../lib');
 var should = require('should'),
     expect = require('expect.js');
 
-describe('parser', function () {
+describe.skip('parser', function () {
   it('should parse some html', function () {
     var html = "<p>hello {{name}}, how are you?</p>";
     var result = LIB.parser.parse(html).body;
@@ -47,10 +47,19 @@ describe('parser', function () {
       result[0].type.should.equal('IfStatement');
       dump(result);
     });
-    it.only('should parse a nested template tag ', function () {
+    it('should parse a nested template tag ', function () {
       var html = "<template repeat=\"{{user, name in users}}\">Greetings<br><template if=\"{{user}}\">hello {{name}}</template></template>";
 
       //html = "{{user[abc]}}";
+      var result = LIB.parser.parse(html);
+      dump(result);
+      var compiled = LIB.compiler.compile(result);
+      dump(compiled);
+      var generated = LIB.codegen.generate(compiled);
+      dump(generated);
+    });
+    it('should parse a template tag with vanilla repeat', function () {
+      var html = "<template repeat=\"{{users}}\">Greetings<br>hello {{name}}</template>";
       var result = LIB.parser.parse(html);
       dump(result);
       var compiled = LIB.compiler.compile(result);
@@ -74,11 +83,13 @@ describe('parser', function () {
   });
   describe("<content>", function () {
     it('should parse a content tag', function () {
-      var html = "<content>wat</content>";
-      var result = LIB.parser.parse(html).body;
+      var html = "<content>this is {{empty}}</content>";
+      var result = LIB.parser.parse(html);
       dump(result);
-      result.length.should.equal(1);
-      result[0].type.should.equal('ContentStatement');
+      var compiled = LIB.compiler.compile(result);
+      dump(compiled);
+      var generated = LIB.codegen.generate(compiled);
+      dump(generated);
     });
     it('should parse an empty content tag', function () {
       var html = "<content></content>";
@@ -86,6 +97,17 @@ describe('parser', function () {
       dump(result);
       result.length.should.equal(1);
       result[0].type.should.equal('ContentStatement');
+    });
+  });
+  describe("<layout>", function () {
+    it('should parse a layout tag', function () {
+      var html = "<layout src=\"foo.html\">this is {{value}}</layout>";
+      var result = LIB.parser.parse(html);
+      dump(result);
+      var compiled = LIB.compiler.compile(result);
+      dump(compiled);
+      var generated = LIB.codegen.generate(compiled);
+      dump(generated);
     });
   });
 });

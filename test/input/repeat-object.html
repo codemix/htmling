@@ -1,0 +1,14 @@
+<table>
+  <thead>
+    <tr>
+      <th>Letter</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody><template repeat="{{code, letter in ascii}}">
+    <tr>
+      <td>{{letter}}</td>
+      <td>{{code}}</td>
+    </tr></template>
+  </tbody>
+</table>

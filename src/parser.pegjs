@@ -464,7 +464,7 @@ Expression
   = IterateExpression
 
 IterateExpression
-  = it:Identifier _ index:("," _ Identifier _) "in" _ expression:AliasExpression {
+  = it:Identifier _ index:("," _ Identifier _)? "in" _ expression:AliasExpression {
     return {
       type: 'IterateExpression',
       it: it,
