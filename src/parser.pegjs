@@ -31,40 +31,48 @@
   }
 }
 
+Program
+  = html:HTML {
+    return {
+      type: 'Program',
+      body: html
+    };
+  }
+
 HTML
   = (
     TEMPLATE_ELEMENT
   / CONTENT_ELEMENT
   / LAYOUT_ELEMENT
-  / EXPRESSION
+  / OUTPUT_STATEMENT
   / RAW
   )+
 
 
-MUTE_HTML
-  = (
-    TEMPLATE_ELEMENT
-  / MUTE
-  )+
-
 RAW "Raw Content"
-  = body:$(!(TEMPLATE_ELEMENT / CONTENT_ELEMENT / LAYOUT_ELEMENT / EXPRESSION) .)+ {
+  = body:$(!(
+        TEMPLATE_ELEMENT
+      / CONTENT_ELEMENT
+      / LAYOUT_ELEMENT
+      / OUTPUT_STATEMENT
+      / SCRIPT_ELEMENT
+      / "</template>"
+      / "</content>"
+      / "</layout>"
+      / "</script>"
+    ) .)+ {
     return {
       type: 'OutputStatement',
-      content: body
-    };
-  }
-
-MUTE "Mute Content"
-  = body:$(!(TEMPLATE_ELEMENT / "</template>") .)+ {
-    return {
-      type: 'OutputStatement',
-      content: body
+      expression: {
+        type: 'Literal',
+        value: body,
+        raw: JSON.stringify(body)
+      }
     };
   }
 
 TEMPLATE_ELEMENT "<template>"
-  = "<template" attrs:ATTRIBUTES? _ ">" _ body:MUTE_HTML? _ "</template>" {
+  = "<template" attrs:ATTRIBUTES? _ ">" _ body:HTML? _ "</template>" {
     attrs = attrs || {};
     var obj;
     if (attrs.bind) {
@@ -83,7 +91,7 @@ TEMPLATE_ELEMENT "<template>"
     }
     else {
       obj = {
-        type: 'TemplateElement',
+        type: 'BlockStatement',
         body: body
       };
     }
@@ -92,33 +100,75 @@ TEMPLATE_ELEMENT "<template>"
       obj = {
         type: 'IfStatement',
         test: attrs.if.expression,
-        consequent: obj
+        consequent: obj,
+        alternate: null
       };
     }
 
-    if (obj.type === 'TemplateElement') {
+    if (obj.type === 'BlockStatement') {
       obj.attributes = attrs;
     }
     return obj;
   }
 
+
 CONTENT_ELEMENT "<content>"
   = "<content" attrs:ATTRIBUTES? _ ">" body:HTML? "</content>" {
     return {
-      type: 'content',
-      attributes: attrs,
-      body: body
+      type: 'ContentStatement',
+      attributes: attrs || {},
+      body: body || []
     };
   }
 
 LAYOUT_ELEMENT "<layout>"
   = "<layout" attrs:ATTRIBUTES? _ ">" body:HTML? "</layout>" {
     return {
-      type: 'layout',
+      type: 'LayoutStatement',
       attributes: attrs || {},
       body: body
     };
   }
+
+SCRIPT_ELEMENT "<script>"
+  = content:$("<script" RAW_ATTRIBUTES? _ ">" SCRIPT_CONTENT? _ "</script>") {
+    return {
+      type: 'OutputStatement',
+      expression: {
+        type: 'Literal',
+        value: content,
+        raw: JSON.stringify(content)
+      }
+    };
+  }
+
+SCRIPT_CONTENT "Script Content"
+  = body:$(!("</script>") .)+ {
+    return {
+      type: 'OutputStatement',
+      expression: {
+        type: 'Literal',
+        value: body,
+        raw: JSON.stringify(body)
+      }
+    };
+  }
+
+RAW_ATTRIBUTE_VALUE
+  = StringLiteral
+  / IdentifierName
+
+RAW_ATTRIBUTES "Attribute List"
+  = $(_ RAW_ATTRIBUTE)+
+
+RAW_ATTRIBUTE "Attribute"
+  = $(IdentifierName (_ "=" _ RAW_ATTRIBUTE_VALUE))? {
+    return {
+      name: name,
+      value: extractOptional(value, 3) || true
+    }
+  }
+
 
 ATTRIBUTES "Attribute List"
   = _ items:(ATTRIBUTE _)+ {
@@ -143,6 +193,12 @@ ATTRIBUTE_VALUE
 
 EXPRESSION "Expression"
   = "{{" _ e:ExpressionStatement _ "}}" { return e; }
+
+OUTPUT_STATEMENT "OutputStatement"
+  = "{{" _ e:ExpressionStatement _ "}}" {
+    e.type = "OutputStatement";
+    return e;
+  }
 
 /* ---- Lexical Grammar ----- */
 
@@ -192,11 +248,25 @@ ExpressionStatement "ExpressionStatement"
 
 Identifier
   = !ReservedWord name:IdentifierName {
-    var offsetStart = offset(),
-        offsetEnd = offsetStart + name.length;
     return {
       type: 'Identifier',
       name: name
+    };
+  }
+
+MarkedIdentifier
+  = !ReservedWord name:IdentifierName {
+    return {
+      type: 'MemberExpression',
+      computed: false,
+      object: {
+        type: 'Identifier',
+        name: '__object'
+      },
+      property: {
+        type: 'Identifier',
+        name: name
+      }
     };
   }
 
@@ -322,38 +392,6 @@ SingleStringCharacter
   / "\\" sequence:EscapeSequence { return sequence; }
   / LineContinuation
 
-CharacterClassMatcher "character class"
-  = "["
-    inverted:"^"?
-    parts:(ClassCharacterRange / ClassCharacter)*
-    "]"
-    ignoreCase:"i"?
-    {
-      return {
-        type:       "class",
-        parts:      filterEmptyStrings(parts),
-        inverted:   inverted !== null,
-        ignoreCase: ignoreCase !== null,
-        rawText:    text()
-      };
-    }
-
-ClassCharacterRange
-  = begin:ClassCharacter "-" end:ClassCharacter {
-      if (begin.charCodeAt(0) > end.charCodeAt(0)) {
-        error(
-          "Invalid character range: " + text() + "."
-        );
-      }
-
-      return [begin, end];
-    }
-
-ClassCharacter
-  = !("]" / "\\" / LineTerminator) SourceCharacter { return text(); }
-  / "\\" sequence:EscapeSequence { return sequence; }
-  / LineContinuation
-
 LineContinuation
   = "\\" LineTerminatorSequence { return ""; }
 
@@ -426,7 +464,7 @@ Expression
   = AliasExpression
 
 AliasExpression
-  = subject:CallExpression _ "as" !IdentifierPart _ alias:Identifier {
+  = subject:CallExpression _ "as" _ alias:Identifier {
     return {
       type: 'AliasExpression',
       subject: subject,
@@ -440,7 +478,15 @@ CallExpression
     return [head].concat(extractList(tail, 3)).reduce(function (arg, expr) {
       return {
         type: 'CallExpression',
-        callee: expr,
+        callee: {
+          type: 'MemberExpression',
+          computed: false,
+          object: {
+            type: 'Identifier',
+            name: '__context'
+          },
+          property: expr
+        },
         arguments: [arg]
       };
     }, arg);
@@ -495,7 +541,128 @@ UnaryExpression
 
 
 MemberExpression
-  = left:Identifier "." right:MemberExpression {
+  = head:MarkedIdentifier tail:Accessor* {
+    return {
+      type: 'SequenceExpression',
+      expressions: [
+        {
+          type: 'AssignmentExpression',
+          operator: '=',
+          left: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          right: head
+        },
+        {
+          type: 'ConditionalExpression',
+          test: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          consequent: tail.reduceRight(function (prev, item) {
+            item.expressions[1].consequent = prev;
+            return item;
+          },{ type: 'Identifier', name: '__ref'}),
+          alternate: {
+            type: 'Literal',
+            value: '',
+            raw: '""'
+          }
+        }
+      ]
+    };
+  }
+  / Literal
+  / ArrayExpression
+  / ObjectExpression
+  / SequenceExpression
+
+Accessor
+  = "." v:Identifier {
+    return {
+      type: 'SequenceExpression',
+      expressions: [
+       {
+          type: 'AssignmentExpression',
+          operator: '=',
+          left: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          right: {
+            type: 'MemberExpression',
+            computed: false,
+            object: {
+              type: 'Identifier',
+              name: '__ref'
+            },
+            property: v
+          }
+        },
+        {
+          type: 'ConditionalExpression',
+          test: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          consequent: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          alternate: {
+            type: 'Literal',
+            value: '',
+            raw: '""'
+          }
+        }
+      ]
+    };
+  }
+  / "[" _ v:Expression _ "]" {
+    return {
+      type: 'SequenceExpression',
+      expressions: [
+       {
+          type: 'AssignmentExpression',
+          operator: '=',
+          left: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          right: {
+            type: 'MemberExpression',
+            computed: true,
+            object: {
+              type: 'Identifier',
+              name: '__ref'
+            },
+            property: v
+          }
+        },
+        {
+          type: 'ConditionalExpression',
+          test: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          consequent: {
+            type: 'Identifier',
+            name: '__ref'
+          },
+          alternate: {
+            type: 'Literal',
+            value: '',
+            raw: '""'
+          }
+        }
+      ]
+    };
+  }
+
+
+SubMemberExpression
+  = left:Identifier "." right:SubMemberExpression {
       return {
         type: 'MemberExpression',
         computed: false,
@@ -512,10 +679,7 @@ MemberExpression
       };
   }
   / Identifier
-  / Literal
-  / ArrayExpression
-  / ObjectExpression
-  / SequenceExpression
+
 
 Literal
   = StringLiteral
