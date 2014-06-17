@@ -1,0 +1,7 @@
+<template bind="{{users[0] as item}}">
+  <h1>{{item.name}}</h1>
+<template bind="{{item.country as c}}">
+    <h4>{{c.name}}</h4>
+    <p>{{c.name}}'s ISO country code is {{c.iso2}}.</p>
+</template>
+</template>

@@ -8,10 +8,13 @@ var Promise = require('bluebird'),
 describe("Integration Tests", function () {
   run("simple");
   run("page");
+  run("page-with-content");
   run("repeat");
   run("repeat-with-index");
   run("repeat-object");
   run("sanitize");
+  run("bind");
+  run("bind-with-alias");
 });
 
 
@@ -23,8 +26,13 @@ function run (name) {
     ])
     .spread(function (input, expected) {
       var template = LIB.compile(input);
+      //console.log(template.render+'')
       // console.log(template.render(fixtures));
-      template.render(fixtures).should.equal(expected);
+      var content = '';
+      if (/-with-content$/.test(name)) {
+        content = '<p>Content</p>';
+      }
+      template.render(fixtures, content).should.equal(expected);
     });
   });
 }
