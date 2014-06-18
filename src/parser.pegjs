@@ -158,7 +158,7 @@ SCRIPT_CONTENT "Script Content"
   }
 
 RAW_ATTRIBUTE_VALUE
-  = StringLiteral
+  = STRING
   / IdentifierName
 
 RAW_ATTRIBUTES "Attribute List"
@@ -186,7 +186,7 @@ ATTRIBUTE "Attribute"
 
 ATTRIBUTE_VALUE
   = "\"" _ e:EXPRESSION _ "\"" { return e; }
-  / StringLiteral
+  / STRING
   / IdentifierName
 
 EXPRESSION "Expression"
@@ -372,14 +372,26 @@ BooleanLiteral
     };
   }
 
-LiteralMatcher "literal"
-  = value:StringLiteral ignoreCase:"i"? {
-      return { type: "literal", value: value, ignoreCase: ignoreCase !== null };
-    }
+STRING "string"
+  = '"' chars:$DoubleStringCharacter* '"' { return chars; }
+  / "'" chars:$SingleStringCharacter* "'" { return chars; }
+
 
 StringLiteral "string"
-  = '"' chars:DoubleStringCharacter* '"' { return chars.join(""); }
-  / "'" chars:SingleStringCharacter* "'" { return chars.join(""); }
+  = '"' chars:$DoubleStringCharacter* '"' {
+    return {
+      type: 'Literal',
+      value: chars,
+      raw: '"' + chars + '"'
+    };
+  }
+  / "'" chars:$SingleStringCharacter* "'" {
+    return {
+      type: 'Literal',
+      value: chars,
+      raw: "'" + chars + "'"
+    };
+  }
 
 DoubleStringCharacter
   = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }

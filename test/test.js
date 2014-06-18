@@ -19,6 +19,7 @@ describe("Integration Tests", function () {
   run("bind");
   run("bind-with-alias");
   run("layout");
+  run("optional");
 });
 
 
