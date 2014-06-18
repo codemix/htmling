@@ -1,6 +1,6 @@
 # HTMLing
 
-[Polymer](http://polymer-project.org/) compatible HTML based templating syntax for node.js.
+[Polymer](http://polymer-project.org/) compatible HTML5 based templating syntax for node.js.
 Render your templates server-side using the same syntax as in the browser, with no virtual DOM trickery required.
 
 

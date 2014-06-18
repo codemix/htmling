@@ -1,7 +1,7 @@
 {
   "name": "htmling",
-  "version": "0.0.0",
-  "description": "Use HTML5 <template> and <content> syntax in node.js",
+  "version": "0.0.1",
+  "description": "Polymer compatible HTML5 based templating syntax for node.js.",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
@@ -13,6 +13,9 @@
     "jshint": "jshint ./lib",
     "pretest": "npm run peg && npm run jshint",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha"
+  },
+  "bin": {
+    "htmling": "./bin/htmling"
   },
   "repository": {
     "type": "git",
