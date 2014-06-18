@@ -1,6 +1,6 @@
 # HTMLing
 
-[Polymer](http://polymer-project.org/)'s HTML based templating syntax for node.js.
+[Polymer](http://polymer-project.org/) compatible HTML based templating syntax for node.js.
 Render your templates server-side using the same syntax as in the browser, with no virtual DOM trickery required.
 
 
@@ -128,7 +128,7 @@ It's also possible to use HTMLing as a library:
 ```js
 var HTMLing = require('htmling');
 
-var template = HTMLing('Hello {{name}}');
+var template = HTMLing.string('Hello {{name}}');
 
 console.log(template.render({name: 'Charles'})); // "Hello Charles"
 ```
