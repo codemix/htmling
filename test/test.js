@@ -20,6 +20,7 @@ describe("Integration Tests", function () {
   run("bind-with-alias");
   run("layout");
   run("optional");
+  run("filter");
 });
 
 
@@ -39,6 +40,14 @@ function run (name) {
       if (/-with-content$/.test(name)) {
         content = '<p>Content</p>';
       }
+
+      template.toCase = function (direction, input) {
+        return input['to' + direction.charAt(0).toUpperCase() + direction.slice(1) + 'Case']();
+      };
+
+      template.reverse = function (input) {
+        return input.split('').reverse().join('');
+      };
       template.render(fixtures, content).should.equal(expected);
     });
   });

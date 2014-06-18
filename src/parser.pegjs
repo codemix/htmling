@@ -497,7 +497,7 @@ AliasExpression
   / CallExpression
 
 CallExpression
-  = arg:ConditionalExpression _ "|" _ head:Identifier tail:(_ "|" _ Identifier)* {
+  = arg:ConditionalExpression _ "|" _ head:(Identifier CallParameters?) tail:(_ "|" _ (Identifier CallParameters?))* {
     return [head].concat(extractList(tail, 3)).reduce(function (arg, expr) {
       return {
         type: 'CallExpression',
@@ -508,15 +508,23 @@ CallExpression
             type: 'Identifier',
             name: 'context'
           },
-          property: expr
+          property: expr[0]
         },
-        arguments: [arg]
+        arguments: (expr[1] || []).concat(arg)
       };
     }, arg);
   }
   / ConditionalExpression
 
-
+CallParameters
+  = "(" _ head:Expression? tail:(_ "," _ Expression)* _ ")" {
+    if (!head) {
+      return [];
+    }
+    else {
+      return [head].concat(extractList(tail, 3));
+    }
+  }
 
 ConditionalExpression
   = test:LogicalExpression _ "?" _ consequent:Expression _ ":" _ alternate:Expression {
