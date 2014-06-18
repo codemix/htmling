@@ -1,5 +1,7 @@
 # HTMLing
 
+[![Build Status](https://travis-ci.org/codemix/htmling.svg?branch=master)](https://travis-ci.org/codemix/htmling)
+
 [Polymer](http://polymer-project.org/) compatible HTML5 based templating syntax for node.js.
 Render your templates server-side using the same syntax as in the browser, with no virtual DOM trickery required.
 
