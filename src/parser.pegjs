@@ -506,7 +506,7 @@ CallExpression
           computed: false,
           object: {
             type: 'Identifier',
-            name: 'context'
+            name: 'filterContext'
           },
           property: expr[0]
         },
