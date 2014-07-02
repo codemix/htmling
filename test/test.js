@@ -9,10 +9,12 @@ var Promise = require('bluebird'),
 
 
 describe("Integration Tests", function () {
+  run("nothing");
   run("simple");
   run("page");
   run("page-with-content");
   run("repeat");
+  run("repeat-simple");
   run("repeat-with-index");
   run("repeat-object");
   run("sanitize");
