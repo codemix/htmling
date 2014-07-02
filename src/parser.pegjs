@@ -31,10 +31,10 @@
   }
 }
 
-Program
+Template
   = html:HTML {
     return {
-      type: 'Program',
+      type: 'Template',
       body: html
     };
   }
