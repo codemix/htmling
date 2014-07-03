@@ -32,10 +32,10 @@
 }
 
 Template
-  = html:HTML {
+  = html:HTML? {
     return {
       type: 'Template',
-      body: html
+      body: html || []
     };
   }
 

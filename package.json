@@ -50,6 +50,7 @@
     "mkdirp": "~0.5.0",
     "classing": "0.0.9",
     "esprima": "~1.2.2",
-    "fast.js": "0.0.2"
+    "fast.js": "0.0.2",
+    "node-watch": "~0.3.4"
   }
 }
