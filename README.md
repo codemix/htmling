@@ -149,6 +149,29 @@ var templates = HTMLing.dir('./pages');
 console.log(templates.render('index.html', {}))
 ```
 
+### Using as an express view engine
+
+HTMLing has support for [express.js](http://expressjs.com/).
+
+```js
+var HTMLing = require('htmling');
+app.configure(function(){
+  app.engine('html', HTMLing.express(__dirname + '/views/'));
+  app.set('view engine', 'html');
+});
+```
+
+In development mode, you'll probably want to enable the `watch` option. This will reload your
+templates when they change on disk:
+
+```js
+var HTMLing = require('htmling');
+app.configure(function(){
+  app.engine('html', HTMLing.express(__dirname + '/views/', null, null, {watch: true}));
+  app.set('view engine', 'html');
+});
+```
+
 ## License
 
 MIT, see [LICENSE.md](./LICENSE.md).

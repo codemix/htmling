@@ -9,46 +9,60 @@ var Promise = require('bluebird'),
 
 
 describe("Integration Tests", function () {
+  var collection;
+  before(function () {
+    collection = LIB.dir(__dirname + '/input');
+  });
+  run("nothing");
   run("simple");
   run("page");
   run("page-with-content");
   run("repeat");
+  run("repeat-simple");
   run("repeat-with-index");
   run("repeat-object");
   run("sanitize");
   run("bind");
   run("bind-with-alias");
-  run("layout");
+  run("include");
+  run("include-no-content");
+  run("include-with-bind");
+  run("include-with-bind-alias");
+  run("include-repeat");
+  run("include-repeat-no-content");
+  run("include-repeat-alias");
+  run("include-repeat-alias-index");
+  run("include-repeat-alias-no-content");
+  run("include-repeat-alias-index-no-content");
   run("optional");
   run("filter");
-});
 
 
-function run (name) {
-  it("should process " + name + ".html", function () {
-    return Promise.all([
-      fs.readFileAsync(__dirname + '/input/page.html', 'utf8'),
-      fs.readFileAsync(__dirname + '/input/' + name + '.html', 'utf8'),
-      fs.readFileAsync(__dirname + '/expected/' + name + '.html', 'utf8')
-    ])
-    .spread(function (layout, input, expected) {
-      var template = LIB.string(input);
-      template.layouts.set('page.html', LIB.string(layout));
-      //console.log(template.render+'')
-      // console.log(template.render(fixtures));
-      var content = '';
-      if (/-with-content$/.test(name)) {
-        content = '<p>Content</p>';
-      }
 
-      template.toCase = function (direction, input) {
-        return input['to' + direction.charAt(0).toUpperCase() + direction.slice(1) + 'Case']();
-      };
+  function run (name) {
+    it("should process " + name + ".html", function () {
+      return Promise.all([
+        fs.readFileAsync(__dirname + '/expected/' + name + '.html', 'utf8')
+      ])
+      .spread(function (expected) {
+        var template = collection.get(name + '.html');
 
-      template.reverse = function (input) {
-        return input.split('').reverse().join('');
-      };
-      template.render(fixtures, content).should.equal(expected);
+        //console.log(template.render+'')
+        // console.log(template.render(fixtures));
+        var content = '';
+        if (/-with-content$/.test(name)) {
+          content = '<p>Content</p>';
+        }
+
+        template.toCase = function (direction, input) {
+          return input['to' + direction.charAt(0).toUpperCase() + direction.slice(1) + 'Case']();
+        };
+
+        template.reverse = function (input) {
+          return input.split('').reverse().join('');
+        };
+        template.render(fixtures, content).should.equal(expected);
+      });
     });
-  });
-}
+  }
+});
