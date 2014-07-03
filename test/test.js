@@ -25,6 +25,9 @@ describe("Integration Tests", function () {
   run("bind");
   run("bind-with-alias");
   run("include");
+  run("include-no-content");
+  run("include-with-bind");
+  run("include-with-bind-alias");
   run("optional");
   run("filter");
 
