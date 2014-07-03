@@ -128,7 +128,7 @@ LAYOUT_ELEMENT "<layout>"
     return {
       type: 'LayoutStatement',
       attributes: attrs || {},
-      body: body
+      body: body || []
     };
   }
 
