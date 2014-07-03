@@ -28,6 +28,12 @@ describe("Integration Tests", function () {
   run("include-no-content");
   run("include-with-bind");
   run("include-with-bind-alias");
+  run("include-repeat");
+  run("include-repeat-no-content");
+  run("include-repeat-alias");
+  run("include-repeat-alias-index");
+  run("include-repeat-alias-no-content");
+  run("include-repeat-alias-index-no-content");
   run("optional");
   run("filter");
 
