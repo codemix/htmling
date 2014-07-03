@@ -43,7 +43,7 @@ HTML
   = (
     TEMPLATE_ELEMENT
   / CONTENT_ELEMENT
-  / LAYOUT_ELEMENT
+  / INCLUDE_ELEMENT
   / OUTPUT_STATEMENT
   / SCRIPT_ELEMENT
   / RAW
@@ -54,12 +54,12 @@ RAW "Raw Content"
   = body:$(!(
         TEMPLATE_ELEMENT
       / CONTENT_ELEMENT
-      / LAYOUT_ELEMENT
+      / INCLUDE_ELEMENT
       / OUTPUT_STATEMENT
       / SCRIPT_ELEMENT
       / "</template>"
       / "</content>"
-      / "</layout>"
+      / "</include>"
       / "</script>"
     ) .)+ {
     return {
@@ -123,10 +123,10 @@ CONTENT_ELEMENT "<content>"
     };
   }
 
-LAYOUT_ELEMENT "<layout>"
-  = "<layout" attrs:ATTRIBUTES? _ ">" body:HTML? "</layout>" {
+INCLUDE_ELEMENT "<include>"
+  = "<include" attrs:ATTRIBUTES? _ ">" body:HTML? "</include>" {
     return {
-      type: 'LayoutStatement',
+      type: 'IncludeStatement',
       attributes: attrs || {},
       body: body || []
     };

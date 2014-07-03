@@ -24,7 +24,7 @@ describe("Integration Tests", function () {
   run("sanitize");
   run("bind");
   run("bind-with-alias");
-  run("layout");
+  run("include");
   run("optional");
   run("filter");
 
