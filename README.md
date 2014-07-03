@@ -167,7 +167,7 @@ templates when they change on disk:
 ```js
 var HTMLing = require('htmling');
 app.configure(function(){
-  app.engine('html', HTMLing.express(__dirname + '/views/', null, null, {watch: true}));
+  app.engine('html', HTMLing.express(__dirname + '/views/', {watch: true}));
   app.set('view engine', 'html');
 });
 ```
