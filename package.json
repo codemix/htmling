@@ -51,6 +51,7 @@
     "classing": "0.0.9",
     "esprima": "~1.2.2",
     "fast.js": "0.0.3",
-    "node-watch": "~0.3.4"
+    "node-watch": "~0.3.4",
+    "html-minifier": "~0.6.3"
   }
 }
