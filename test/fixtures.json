@@ -50,5 +50,6 @@
   "unsafe": [
     "<a href=\"#wat\">Danger</a>",
     "<script>alert(document.cookie)</script>"
-  ]
+  ],
+  "type": "text/javascript"
 }

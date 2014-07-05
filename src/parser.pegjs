@@ -133,16 +133,41 @@ INCLUDE_ELEMENT "<include>"
   }
 
 SCRIPT_ELEMENT "<script>"
-  = content:$("<script" RAW_ATTRIBUTES? _ ">" SCRIPT_CONTENT? "</script>") {
-    return {
+  = "<script" attrs:RAW_ATTRIBUTES? content:$(_ ">" SCRIPT_CONTENT? "</script>") {
+    var statement = {
       type: 'OutputStatement',
       raw: true,
-      expression: {
-        type: 'Literal',
-        value: content,
-        raw: JSON.stringify(content)
-      }
+      expression: {}
     };
+
+    if (attrs) {
+      var parsed = parse(attrs);
+      if (parsed.body.length > 1) {
+        parsed.type = 'BlockStatement';
+        parsed.body.unshift({
+          type: 'OutputStatement',
+          raw: true,
+          expression: {
+            type: 'Literal',
+            value: '<script',
+            raw: '"<script"'
+          }
+        });
+        statement.expression = {
+          type: 'Literal',
+          value: content,
+          raw: JSON.stringify(content)
+        };
+        parsed.body.push(statement);
+        return parsed;
+      }
+    }
+    statement.expression = {
+      type: 'Literal',
+      value: '<script' + (attrs || '' ) + content,
+      raw: JSON.stringify('<script' + (attrs || '' ) + content)
+    };
+    return statement;
   }
 
 SCRIPT_CONTENT "Script Content"
@@ -159,13 +184,13 @@ SCRIPT_CONTENT "Script Content"
 
 RAW_ATTRIBUTE_VALUE
   = STRING
-  / IdentifierName
+  / $(!(["'`=<>] / WhiteSpace) .)+
 
 RAW_ATTRIBUTES "Attribute List"
   = $(_ RAW_ATTRIBUTE)+
 
 RAW_ATTRIBUTE "Attribute"
-  = $(IdentifierName (_ "=" _ RAW_ATTRIBUTE_VALUE)?)
+  = $(ATTRIBUTE_NAME (_ "=" _ RAW_ATTRIBUTE_VALUE)?)
 
 
 ATTRIBUTES "Attribute List"
@@ -177,15 +202,19 @@ ATTRIBUTES "Attribute List"
   }
 
 ATTRIBUTE "Attribute"
-  = name:IdentifierName value:(_ "=" _ ATTRIBUTE_VALUE)? {
+  = name:ATTRIBUTE_NAME value:(_ "=" _ ATTRIBUTE_VALUE)? {
     return {
       name: name,
       value: extractOptional(value, 3) || true
     }
   }
 
+ATTRIBUTE_NAME
+  = $([A-Za-z_:] [A-Za-z0-9_:.-]*)
+
 ATTRIBUTE_VALUE
   = "\"" _ e:EXPRESSION _ "\"" { return e; }
+  / "'" _ e:EXPRESSION _ "'" { return e; }
   / STRING
   / IdentifierName
 
@@ -270,7 +299,7 @@ MarkedIdentifier
   }
 
 IdentifierName "identifier"
-  = first:IdentifierStart rest:IdentifierPart* { return first + rest.join(""); }
+  = $(IdentifierStart IdentifierPart*)
 
 IdentifierStart
   = UnicodeLetter
