@@ -74,45 +74,60 @@ RAW "Raw Content"
   }
 
 TEMPLATE_ELEMENT "<template>"
-  = "<template" attrs:ATTRIBUTES? _ ">" _ body:HTML? _ "</template>" {
-    attrs = attrs || {};
-    var obj;
-    if (attrs.bind) {
-      obj = {
-        type: 'BindStatement',
-        expression: attrs.bind.expression,
-        body: body
+  = "<template" attrs:ATTRIBUTES? &{ return !attrs || !attrs.client; } _ ">" _ body:HTML? _ "</template>" {
+      attrs = attrs || {};
+      var obj;
+      if (attrs.bind) {
+        obj = {
+          type: 'BindStatement',
+          expression: attrs.bind.expression,
+          body: body
+        }
       }
-    }
-    else if (attrs.repeat) {
-      obj = {
-        type: 'RepeatStatement',
-        expression: attrs.repeat.expression,
-        body: body
-      };
-    }
-    else {
-      obj = {
-        type: 'BlockStatement',
-        body: body
-      };
-    }
+      else if (attrs.repeat) {
+        obj = {
+          type: 'RepeatStatement',
+          expression: attrs.repeat.expression,
+          body: body
+        };
+      }
+      else {
+        obj = {
+          type: 'BlockStatement',
+          body: body
+        };
+      }
 
-    if (attrs.if) {
-      obj = {
-        type: 'IfStatement',
-        test: attrs.if.expression,
-        consequent: obj,
-        alternate: null
-      };
-    }
+      if (attrs.if) {
+        obj = {
+          type: 'IfStatement',
+          test: attrs.if.expression,
+          consequent: obj,
+          alternate: null
+        };
+      }
 
-    if (obj.type === 'BlockStatement') {
-      obj.attributes = attrs;
+      if (obj.type === 'BlockStatement') {
+        obj.attributes = attrs;
+      }
+      return obj;
     }
-    return obj;
+  / body:MUTE_TEMPLATE {
+    return {
+      type: 'OutputStatement',
+      expression: {
+        type: 'Literal',
+        value: body,
+        raw: JSON.stringify(body)
+      }
+    };
   }
 
+MUTE_TEMPLATE "Mute Template"
+  = $("<template" RAW_ATTRIBUTES? _ ">" MUTE_TEMPLATE_CONTENT? "</template>")
+
+MUTE_TEMPLATE_CONTENT "Mute Template Content"
+  = $(MUTE_TEMPLATE / (!("</template>" / "<template") .))+
 
 CONTENT_ELEMENT "<content>"
   = "<content" attrs:ATTRIBUTES? _ ">" body:HTML? "</content>" {
