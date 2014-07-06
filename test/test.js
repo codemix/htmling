@@ -36,7 +36,7 @@ describe("Integration Tests", function () {
   run("include-repeat-alias-index-no-content");
   run("optional");
   run("filter");
-
+  run("client-template");
 
 
   function run (name) {
