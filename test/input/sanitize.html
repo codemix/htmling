@@ -1,3 +1,6 @@
 <template repeat="{{item in unsafe}}">
   {{item}}
 </template>
+<script type="{{type}}">
+  console.log('This should not be replaced: {{type}}');
+</script>
