@@ -573,7 +573,7 @@ CallParameters
 ConditionalExpression
   = test:LogicalExpression _ "?" _ consequent:Expression _ ":" _ alternate:Expression {
     return {
-      type: 'LogicalExpression',
+      type: 'ConditionalExpression',
       test: test,
       consequent: consequent,
       alternate: alternate
@@ -679,8 +679,25 @@ Accessor
         {
           type: 'ConditionalExpression',
           test: {
-            type: 'Identifier',
-            name: 'ref'
+            type: 'LogicalExpression',
+            operator: '||',
+            left: {
+              type: 'Identifier',
+              name: 'ref'
+            },
+            right: {
+              type: 'BinaryExpression',
+              operator: '===',
+              left: {
+                type: 'Identifier',
+                name: 'ref'
+              },
+              right: {
+                type: 'Literal',
+                value: 0,
+                raw: '0'
+              }
+            }
           },
           consequent: {
             type: 'Identifier',
@@ -719,8 +736,25 @@ Accessor
         {
           type: 'ConditionalExpression',
           test: {
-            type: 'Identifier',
-            name: 'ref'
+            type: 'LogicalExpression',
+            operator: '||',
+            left: {
+              type: 'Identifier',
+              name: 'ref'
+            },
+            right: {
+              type: 'BinaryExpression',
+              operator: '===',
+              left: {
+                type: 'Identifier',
+                name: 'ref'
+              },
+              right: {
+                type: 'Literal',
+                value: 0,
+                raw: '0'
+              }
+            }
           },
           consequent: {
             type: 'Identifier',
