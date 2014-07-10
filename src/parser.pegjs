@@ -573,7 +573,7 @@ CallParameters
 ConditionalExpression
   = test:LogicalExpression _ "?" _ consequent:Expression _ ":" _ alternate:Expression {
     return {
-      type: 'LogicalExpression',
+      type: 'ConditionalExpression',
       test: test,
       consequent: consequent,
       alternate: alternate

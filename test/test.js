@@ -38,6 +38,7 @@ describe("Integration Tests", function () {
   run("optional");
   run("filter");
   run("client-template");
+  run("ternary");
 
 
   function run (name) {
