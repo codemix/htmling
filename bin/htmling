@@ -15,6 +15,10 @@ var packageData = require('../package.json'),
         boolean: true,
         default: false
       },
+      e: {
+        alias: 'element',
+        describe: 'Register a custom element.'
+      },
       v: {
         alias: 'version',
         describe: 'Display the HTMLing version.'
@@ -41,17 +45,32 @@ argv = yargs.demand(1, 'Must specify a source directory.').argv;
 var LIB = require('../lib');
 var fs = require('fs'),
     path = require('path'),
-    mkdirp = require('mkdirp');
+    mkdirp = require('mkdirp'),
+    options = {
+      elements: {}
+    };
+
+if (argv.element) {
+  if (!Array.isArray(argv.element)) {
+    argv.element = [argv.element];
+  }
+  options.elements = argv.element.reduce(function (elements, item) {
+    var parts = item.split(':');
+    elements[parts[0]] = parts[1];
+    return elements;
+  }, options.elements);
+}
 
 var collection = argv._.reduce(function (collection, filename) {
   if (fs.statSync(filename).isDirectory()) {
-    return collection.configure(LIB.dir(filename).items);
+    return collection.configure(LIB.dir(filename, options).items);
   }
   else {
-    return collection.set(filename, LIB.file(filename));
+    return collection.set(filename, LIB.file(filename, options));
   }
 }, new LIB.Collection());
 
+collection.elements = options.elements;
 
 var output = {};
 

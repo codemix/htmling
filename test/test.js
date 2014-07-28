@@ -11,7 +11,11 @@ var Promise = require('bluebird'),
 describe("Integration Tests", function () {
   var collection;
   before(function () {
-    collection = LIB.dir(__dirname + '/input');
+    collection = LIB.dir(__dirname + '/input', {
+      elements: {
+        'demo-nav-bar': "/custom-elements/demo-nav-bar.html"
+      }
+    });
   });
   run("nothing");
   run("simple");
@@ -40,6 +44,7 @@ describe("Integration Tests", function () {
   run("client-template");
   run("ternary");
   run("if");
+  run("custom-element");
 
 
   function run (name) {

@@ -41,7 +41,9 @@ Template
 
 HTML
   = (
-    TEMPLATE_ELEMENT
+    COMMENT
+  / TEMPLATE_ELEMENT
+  / CUSTOM_ELEMENT
   / CONTENT_ELEMENT
   / INCLUDE_ELEMENT
   / OUTPUT_STATEMENT
@@ -53,6 +55,7 @@ HTML
 RAW "Raw Content"
   = body:$(!(
         TEMPLATE_ELEMENT
+      / CUSTOM_ELEMENT
       / CONTENT_ELEMENT
       / INCLUDE_ELEMENT
       / OUTPUT_STATEMENT
@@ -61,6 +64,7 @@ RAW "Raw Content"
       / "</content>"
       / "</include>"
       / "</script>"
+      / CustomElementEnder
     ) .)+ {
     return {
       type: 'OutputStatement',
@@ -69,6 +73,19 @@ RAW "Raw Content"
         type: 'Literal',
         value: body,
         raw: JSON.stringify(body)
+      }
+    };
+  }
+
+COMMENT
+  = c:$(Comment) {
+    return {
+      type: 'OutputStatement',
+      raw: true,
+      expression: {
+        type: 'Literal',
+        value: c,
+        raw: JSON.stringify(c)
       }
     };
   }
@@ -128,6 +145,41 @@ MUTE_TEMPLATE "Mute Template"
 
 MUTE_TEMPLATE_CONTENT "Mute Template Content"
   = $(MUTE_TEMPLATE / (!("</template>" / "<template") .))+
+
+
+CUSTOM_ELEMENT "Custom Element"
+  = "<" tag:CustomElementName &{ return options.elements && options.elements[tag]; } attrs:ATTRIBUTES? _ "/>" {
+    return {
+      type: 'CustomElement',
+      name: tag,
+      attributes: attrs || {},
+      selfClosing: true,
+      body: []
+    };
+  }
+  / "<" tag:CustomElementName attrs:ATTRIBUTES? _ ">" _ body:HTML? _ "</" ender:CustomElementName ">" &{return tag === ender && options.elements && options.elements[tag]; } {
+    return {
+      type: 'CustomElement',
+      name: tag,
+      attributes: attrs || {},
+      selfClosing: false,
+      body: body || []
+    };
+  }
+
+CustomElementName
+  = $(CustomElementStart CustomElementPart+)
+
+CustomElementStart
+  = $([a-z0-9]+)
+
+CustomElementPart
+  = $("-" [a-z0-9]+)
+
+CustomElementEnder
+  = "</" tag:CustomElementName ">"  &{ return options.elements && options.elements[tag]; } {
+    return "</" + tag + ">";
+  }
 
 CONTENT_ELEMENT "<content>"
   = "<content" attrs:ATTRIBUTES? _ ">" body:HTML? "</content>" {
