@@ -593,7 +593,7 @@ LogicalExpression
   / BinaryExpression
 
 BinaryExpression
-  = left:UnaryExpression _ op:("+" / "-" / "*" / "/" / "%" / ">" / ">=" / "<" / "<=" / "===" / "==" / "!==" / "!=") _ right:Expression {
+  = left:UnaryExpression _ op:("+" / "-" / "*" / "/" / "%" / ">=" / ">" / "<=" / "<" / "===" / "==" / "!==" / "!=") _ right:Expression {
     return {
       type: 'BinaryExpression',
       operator: op,
