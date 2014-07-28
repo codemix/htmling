@@ -39,6 +39,7 @@ describe("Integration Tests", function () {
   run("filter");
   run("client-template");
   run("ternary");
+  run("if");
 
 
   function run (name) {
