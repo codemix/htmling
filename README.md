@@ -5,6 +5,7 @@
 [Polymer](http://polymer-project.org/) compatible HTML5 based templating syntax for node.js.
 Render your templates server-side using the same syntax as in the browser, with no virtual DOM trickery required.
 
+For a full demonstration, please see [htmling-demo-app](https://github.com/codemix/htmling-demo-app).
 
 ## Installation
 
@@ -71,6 +72,8 @@ into this:
   </body>
 </html>
 ```
+
+
 
 ## How it works
 
