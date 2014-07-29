@@ -354,6 +354,7 @@ MarkedIdentifier
     return {
       type: 'MemberExpression',
       computed: false,
+      marker: name,
       object: {
         type: 'Identifier',
         name: 'object'
@@ -671,6 +672,14 @@ MemberExpression
   = head:MarkedIdentifier tail:Accessor+ {
     return {
       type: 'SequenceExpression',
+      marker: tail.reduce(function (marker, item) {
+        if (!marker || !item.marker) {
+          return false;
+        }
+        else {
+          return marker + '.' + item.marker;
+        }
+      }, head.marker),
       expressions: [
         {
           type: 'AssignmentExpression',
@@ -710,6 +719,7 @@ Accessor
   = "." v:Identifier {
     return {
       type: 'SequenceExpression',
+      marker: v.name,
       expressions: [
        {
           type: 'AssignmentExpression',
@@ -767,6 +777,7 @@ Accessor
   / "[" _ v:Expression _ "]" {
     return {
       type: 'SequenceExpression',
+      marker: false,
       expressions: [
        {
           type: 'AssignmentExpression',
@@ -821,26 +832,6 @@ Accessor
       ]
     };
   }
-
-
-SubMemberExpression
-  = left:Identifier "." right:SubMemberExpression {
-      return {
-        type: 'MemberExpression',
-        computed: false,
-        object: left,
-        property: right
-      };
-    }
-  / left:Identifier "[" right:Expression "]" {
-      return {
-        type: 'MemberExpression',
-        computed: true,
-        object: left,
-        property: right
-      };
-  }
-  / Identifier
 
 
 Literal
