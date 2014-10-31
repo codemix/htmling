@@ -45,6 +45,7 @@ describe("Integration Tests", function () {
   run("ternary");
   run("if");
   run("custom-element");
+  run("cache-references");
 
 
   function run (name) {
