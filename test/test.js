@@ -13,7 +13,10 @@ describe("Integration Tests", function () {
   before(function () {
     collection = LIB.dir(__dirname + '/input', {
       elements: {
-        'demo-nav-bar': "/custom-elements/demo-nav-bar.html"
+        'demo-nav-bar': "/custom-elements/demo-nav-bar.html",
+        'fn-element': function (attributes, content) {
+          return '<strong>' + attributes.greeting + '</strong>';
+        }
       }
     });
   });
