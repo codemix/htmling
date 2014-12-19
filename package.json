@@ -1,6 +1,6 @@
 {
   "name": "htmling",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Polymer compatible HTML5 based templating syntax for node.js.",
   "main": "lib/index.js",
   "directories": {

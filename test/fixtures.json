@@ -51,5 +51,23 @@
     "<a href=\"#wat\">Danger</a>",
     "<script>alert(document.cookie)</script>"
   ],
-  "type": "text/javascript"
+  "type": "text/javascript",
+  "nested": {
+    "first": {
+      "name": "First Item",
+      "lang": "en",
+      "country": {
+        "name": "United Kingdom",
+        "iso2": "UK"
+      }
+    },
+    "second": {
+      "name": "Second Item",
+      "lang": "de",
+      "country": {
+        "name": "Germany",
+        "iso2": "DE"
+      }
+    }
+  }
 }
