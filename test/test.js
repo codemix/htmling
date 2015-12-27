@@ -29,6 +29,7 @@ describe("Integration Tests", function () {
   run("repeat-with-index");
   run("repeat-object");
   run("sanitize");
+  run("own-html");
   run("bind");
   run("bind-with-alias");
   run("include");
