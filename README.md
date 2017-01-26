@@ -178,3 +178,27 @@ app.configure(function(){
 ## License
 
 MIT, see [LICENSE.md](./LICENSE.md).
+
+## Docker environment
+
+All you need is [Docker](https://www.docker.com/) with `docker-compose` available from your terminal.
+
+
+We have a fancy shortcut to get your application up and running, and you also get access to the container terminal:
+
+```console
+$ make build
+$ make run
+```
+
+From this point, it's just a matter of starting the application from within the container shell:
+
+```console
+htmling:~/app(master)$ npm test
+```
+
+#### Other fancy shortcuts we have for Docker fans
+
+* `$ make in` to open a new container terminal
+* `$ make stop` to stop all containers
+* `$ make clean` to clean the Docker environment

@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  dev:
+    image: htmling
+    hostname: "dev"
+    build: 'docker/'
+    working_dir: /htmling/app
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - $PWD:/htmling/app
+      - $HOME/.ssh:/htmling/.ssh
+      - $HOME/.gitconfig:/htmling/.gitconfig

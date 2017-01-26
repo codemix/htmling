@@ -5,11 +5,9 @@ var Promise = require('bluebird'),
     expect = require('expect.js'),
     should = require('should');
 
-
-
-
 describe("Integration Tests", function () {
   var collection;
+
   before(function () {
     collection = LIB.dir(__dirname + '/input', {
       elements: {
@@ -20,6 +18,7 @@ describe("Integration Tests", function () {
       }
     });
   });
+
   run("nothing");
   run("simple");
   run("page");
@@ -50,7 +49,6 @@ describe("Integration Tests", function () {
   run("custom-element");
   run("cache-references");
 
-
   function run (name) {
     it("should process " + name + ".html", function () {
       return Promise.all([
@@ -73,8 +71,29 @@ describe("Integration Tests", function () {
         template.reverse = function (input) {
           return input.split('').reverse().join('');
         };
+
         template.render(fixtures, content).should.equal(expected);
       });
     });
   }
+
+  it("should process custom-string.html", function () {
+    return Promise.all([
+      fs.readFileAsync(__dirname + '/input/custom-string.html', 'utf8'),
+      fs.readFileAsync(__dirname + '/expected/custom-string.html', 'utf8')
+    ]).then(function (html) {
+      const input = html[0]
+      const expected = html[1]
+
+      var template = LIB.string(input, {
+        elements: {
+          'raw-html': function (params) {
+            return params.content
+          }
+        }
+      })
+
+      template.render({}).should.equal(expected);
+    });
+  });
 });
