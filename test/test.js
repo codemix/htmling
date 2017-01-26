@@ -93,14 +93,6 @@ describe("Integration Tests", function () {
         }
       })
 
-      template.toCase = function (direction, input) {
-        return input['to' + direction.charAt(0).toUpperCase() + direction.slice(1) + 'Case']();
-      };
-
-      template.reverse = function (input) {
-        return input.split('').reverse().join('');
-      };
-
       template.render({}).should.equal(expected);
     });
   });
