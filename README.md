@@ -191,7 +191,7 @@ $ make build
 $ make run
 ```
 
-From this point, it's just a matter of starting the Django application from within the container shell:
+From this point, it's just a matter of starting the application from within the container shell:
 
 ```console
 htmling:~/app(master)$ npm test
