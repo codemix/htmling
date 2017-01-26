@@ -47,6 +47,11 @@
     "E": 69,
     "F": 70
   },
+
+  "forceMyHtml": {
+    "ownHtml": "\n  <p>Sample Text</p>\n  <p>Sample Description</p>\n  <p>Sample own html</p>\n"
+  },
+
   "unsafe": [
     "<a href=\"#wat\">Danger</a>",
     "<script>alert(document.cookie)</script>"
