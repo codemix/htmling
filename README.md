@@ -88,6 +88,12 @@ This compilation process happens only once, and the resulting JavaScript is extr
 
 HTMLing is easy to integrate with your existing build process, either via the command line or library interfaces.
 
+# Key Factors
+
+* Easy to use
+
+* Understandable
+
 ## CLI
 
 HTMLing ships with a small command line interface:
