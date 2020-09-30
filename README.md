@@ -202,3 +202,7 @@ htmling:~/app(master)$ npm test
 * `$ make in` to open a new container terminal
 * `$ make stop` to stop all containers
 * `$ make clean` to clean the Docker environment
+
+
+Open for Suggestion
+Thank You
