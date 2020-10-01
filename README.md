@@ -20,9 +20,7 @@ npm install htmling
 Turns this:
 
 ```html
-<!doctype html>
-<html>
-  <head>
+<!doctype html> <!-- You can use also <!DOCTYPE html> -->
     <title>{{title}}</title>
     <meta name="description" content="{{description}}">
   </head>
