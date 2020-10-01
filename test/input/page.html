@@ -1,14 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{lang}}">
   <head>
     <title>{{title}}</title>
   </head>
   <body>
-    <h1>{{title}}</h1>
-    <p>Logged in as {{name}}</p>
+    <header>
+      <h1>{{title}}</h1>
+      <p>Logged in as {{name}}</p>
+    </header>
     <hr>
-    <content>If you can see this, there is no content yet.</content>
-    <include src="footer.html"></include>
-    <script type="text/javascript">alert('{{yes}}');</script>
+    <main>
+      <content>If you can see this, there is no content yet.</content>
+      <include src="footer.html"></include>
+      <script type="text/javascript">alert('{{yes}}');</script>
+    </main>
   </body>
 </html>
