@@ -1,11 +1,11 @@
-# HTMLing
+# HTMLing - Compatibilating Syntax
 
 [![Build Status](https://travis-ci.org/codemix/htmling.svg?branch=master)](https://travis-ci.org/codemix/htmling)
 
 [Polymer](http://polymer-project.org/) compatible HTML5 based templating syntax for node.js.
 Render your templates server-side using the same syntax as in the browser, with no virtual DOM trickery required.
 
-For a full demonstration, please see [htmling-demo-app](https://github.com/codemix/htmling-demo-app).
+For a full demonstration, please visit [htmling-demo-app](https://github.com/codemix/htmling-demo-app).
 
 ## Installation
 
@@ -164,7 +164,7 @@ app.configure(function(){
 });
 ```
 
-In development mode, you'll probably want to enable the `watch` option. This will reload your
+In development mode, you should probably enable the `watch` option. This will reload your
 templates when they change on disk:
 
 ```js
@@ -199,6 +199,6 @@ htmling:~/app(master)$ npm test
 
 #### Other fancy shortcuts we have for Docker fans
 
-* `$ make in` to open a new container terminal
-* `$ make stop` to stop all containers
-* `$ make clean` to clean the Docker environment
+* `$ make in` to open a new container terminal.
+* `$ make stop` to stop all containers.
+* `$ make clean` to clean the Docker environment.
