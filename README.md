@@ -29,8 +29,8 @@ Turns this:
   <body>
     <h1>{{title}}</h1>
     <ul>
-    <template repeat="{{user in users}}">
-      <li>{{user.name}}</li>
+      <h2><template repeat="{{user in users}}"></h2>
+        <h3><li>{{user.name}}</li></h3>
     </template>
     </ul>
   </body>
@@ -65,10 +65,10 @@ into this:
   </head>
   <body>
     <h1>User List</h1>
-    <ul>
+    <h2><ul>
       <li>Alice</li>
       <li>George</li>
-    </ul>
+    </ul></h2>
   </body>
 </html>
 ```
