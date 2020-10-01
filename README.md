@@ -23,7 +23,7 @@ Turns this:
 <!doctype html>
 <html>
   <head>
-    <title>{{title}}</title>
+    <title>{write title}</title>
     <meta name="description" content="{{description}}">
   </head>
   <body>
