@@ -1,4 +1,4 @@
-# HTMLing
+# Amazing HTMLing
 
 [![Build Status](https://travis-ci.org/codemix/htmling.svg?branch=master)](https://travis-ci.org/codemix/htmling)
 
