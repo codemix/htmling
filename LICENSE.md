@@ -1,4 +1,4 @@
-# The MIT License (MIT)
+# The MIT License Summary
 
 Copyright (c) 2014 codemix.com
 
