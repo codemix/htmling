@@ -20,7 +20,7 @@ npm install htmling
 Turns this:
 
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>{{title}}</title>
@@ -57,7 +57,7 @@ plus this:
 into this:
 
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>User List</title>
